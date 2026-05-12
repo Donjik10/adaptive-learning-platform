@@ -1,0 +1,27 @@
+# Зависимости
+node_modules/
+__pycache__/
+*.pyc
+
+# Базы данных и миграции (пересоздаются)
+*.db
+*.sqlite3
+postgres_data/
+redis_data/
+
+# Переменные окружения (НЕ загружай .env с ключами!)
+.env
+!.env.example
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker (локальные volumes)
+docker-compose.override.yml
