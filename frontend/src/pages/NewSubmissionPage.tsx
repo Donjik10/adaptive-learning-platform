@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useTranslation } from "../context/LanguageContext";
 import { createSubmission, getAssignment, Assignment } from "../api/homework";
 
 const NewSubmissionPage: React.FC = () => {
+  const { t } = useTranslation();
   const { assignmentId } = useParams<{ assignmentId: string }>();
   const navigate = useNavigate();
   const [assignment, setAssignment] = useState<Assignment | null>(null);
@@ -33,26 +35,26 @@ const NewSubmissionPage: React.FC = () => {
     <div className="max-w-3xl mx-auto p-6">
       {assignment && (
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-800 mb-2">{assignment.title}</h1>
-          <p className="text-gray-600">{assignment.description || "No description"}</p>
+          <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-2">{assignment.title}</h1>
+          <p className="text-gray-600 dark:text-gray-400">{assignment.description || t("homework.noText")}</p>
           {assignment.deadline && (
-            <p className="text-sm text-red-500 mt-2">
-              Deadline: {new Date(assignment.deadline).toLocaleDateString()}
+            <p className="text-sm text-red-500 dark:text-red-400 mt-2">
+              {t("homework.deadline")}: {new Date(assignment.deadline).toLocaleDateString()}
             </p>
           )}
         </div>
       )}
 
-      <div className="bg-white rounded-xl border border-gray-200 p-6">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Your Answer
+      <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          {t("homework.answer")}
         </label>
         <textarea
           value={content}
           onChange={(e) => setContent(e.target.value)}
           rows={12}
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-          placeholder="Write your solution here..."
+          className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+          placeholder={t("homework.writeSolution")}
         />
         <div className="mt-4 flex justify-end">
           <button
@@ -60,7 +62,7 @@ const NewSubmissionPage: React.FC = () => {
             disabled={!content.trim() || loading}
             className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition disabled:opacity-50"
           >
-            {loading ? "Submitting..." : "Submit Assignment"}
+            {loading ? t("loading") : t("homework.submitAssignment")}
           </button>
         </div>
       </div>

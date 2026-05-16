@@ -1,6 +1,8 @@
 import React from "react";
 import { Routes, Route, Navigate, useParams } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext";
+import { LanguageProvider } from "./context/LanguageContext";
+import { ThemeProvider } from "./context/ThemeContext";
 import Layout from "components/Layout";
 import Dashboard from "pages/Dashboard";
 import ReviewPage from "pages/ReviewPage";
@@ -136,9 +138,13 @@ const HomeworkWorkspaceWrapper: React.FC = () => {
 
 const App: React.FC = () => {
   return (
-    <AuthProvider>
-      <AppRoutes />
-    </AuthProvider>
+    <ThemeProvider>
+      <LanguageProvider>
+        <AuthProvider>
+          <AppRoutes />
+        </AuthProvider>
+      </LanguageProvider>
+    </ThemeProvider>
   );
 };
 

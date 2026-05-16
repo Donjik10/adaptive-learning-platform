@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useTranslation } from "../context/LanguageContext";
 import {
   Assignment,
   listAssignments,
@@ -10,6 +11,7 @@ import {
 
 const StudentDashboard: React.FC = () => {
   const { user } = useAuth();
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [submissions, setSubmissions] = useState<Submission[]>([]);
@@ -38,29 +40,42 @@ const StudentDashboard: React.FC = () => {
   const getStatusColor = (status?: string) => {
     switch (status) {
       case "reviewed":
-        return "bg-green-100 text-green-700";
+        return "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400";
       case "ai_reviewed":
-        return "bg-purple-100 text-purple-700";
+        return "bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400";
       case "pending":
-        return "bg-yellow-100 text-yellow-700";
+        return "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400";
       default:
-        return "bg-gray-100 text-gray-600";
+        return "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400";
+    }
+  };
+
+  const getStatusText = (status?: string) => {
+    switch (status) {
+      case "ai_reviewed":
+        return t("homework.status.aiReviewed");
+      case "reviewed":
+        return t("homework.status.reviewed");
+      case "pending":
+        return t("homework.status.pending");
+      default:
+        return t("homework.status.notSubmitted");
     }
   };
 
   return (
     <div className="max-w-5xl mx-auto p-6">
-      <h1 className="text-2xl font-bold text-gray-800 mb-6">
-        Welcome back, {user?.name}
+      <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-6">
+        {t("welcomeBack")}, {user?.name}
       </h1>
 
       <div className="grid gap-4">
         {loading && (
-          <p className="text-gray-500">Loading assignments...</p>
+          <p className="text-gray-500 dark:text-gray-400">{t("loading")}</p>
         )}
 
         {!loading && assignments.length === 0 && (
-          <p className="text-gray-500">No assignments available.</p>
+          <p className="text-gray-500 dark:text-gray-400">{t("homework.noAssignments")}</p>
         )}
 
         {assignments.map((assignment) => {
@@ -68,7 +83,7 @@ const StudentDashboard: React.FC = () => {
           return (
             <div
               key={assignment.id}
-              className="bg-white rounded-xl border border-gray-200 p-5 hover:shadow-md transition cursor-pointer"
+              className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 hover:shadow-md transition cursor-pointer"
               onClick={() =>
                 submission
                   ? navigate(`/homework/${submission.id}`)
@@ -77,15 +92,15 @@ const StudentDashboard: React.FC = () => {
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-800">{assignment.title}</h3>
-                  <p className="text-gray-600 text-sm mt-1 line-clamp-2">
-                    {assignment.description || "No description"}
+                  <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100">{assignment.title}</h3>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm mt-1 line-clamp-2">
+                    {assignment.description || t("homework.noText")}
                   </p>
                 </div>
                 <div className="flex flex-col items-end gap-2">
                   {assignment.deadline && (
-                    <span className="text-xs text-gray-500">
-                      Due {new Date(assignment.deadline).toLocaleDateString()}
+                    <span className="text-xs text-gray-500 dark:text-gray-400">
+                      {t("homework.deadline")}: {new Date(assignment.deadline).toLocaleDateString()}
                     </span>
                   )}
                   <span
@@ -93,13 +108,7 @@ const StudentDashboard: React.FC = () => {
                       submission?.status,
                     )}`}
                   >
-                    {submission
-                      ? submission.status === "ai_reviewed"
-                        ? "AI Reviewed"
-                        : submission.status === "reviewed"
-                        ? "Reviewed"
-                        : "Pending"
-                      : "Not Submitted"}
+                    {getStatusText(submission?.status)}
                   </span>
                 </div>
               </div>
