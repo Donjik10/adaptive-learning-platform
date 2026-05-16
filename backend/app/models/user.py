@@ -1,16 +1,23 @@
+import enum
 import uuid
 from datetime import datetime
 
-from sqlalchemy import DateTime, Float, String, func
+from sqlalchemy import DateTime, Enum, Float, String, func
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
 
 
+class UserRole(enum.Enum):
+    STUDENT = "student"
+    TEACHER = "teacher"
+    ADMIN = "admin"
+
+
 class User(Base):
     """
-    Represents a learner in the adaptive platform.
+    Represents a user in the adaptive platform.
 
     Stores personalisation parameters such as learning style and
     daily study limit which are consumed by the scheduling module.
@@ -23,6 +30,10 @@ class User(Base):
     )
     name: Mapped[str] = mapped_column(String(128), nullable=False)
     email: Mapped[str] = mapped_column(String(256), unique=True, nullable=False, index=True)
+    hashed_password: Mapped[str] = mapped_column(String(256), nullable=False, default="")
+    role: Mapped[UserRole] = mapped_column(
+        Enum(UserRole), nullable=False, default=UserRole.STUDENT,
+    )
     learning_style: Mapped[str | None] = mapped_column(
         String(32), nullable=True,
         comment="Preferred learning style: visual / reading / auditory / kinesthetic",
@@ -43,4 +54,10 @@ class User(Base):
     )
     sm2_data: Mapped[list["SM2Data"]] = relationship(
         "SM2Data", back_populates="user", lazy="selectin",
+    )
+    assignments: Mapped[list["Assignment"]] = relationship(
+        "Assignment", back_populates="teacher", lazy="selectin",
+    )
+    submissions: Mapped[list["Submission"]] = relationship(
+        "Submission", back_populates="student", lazy="selectin",
     )

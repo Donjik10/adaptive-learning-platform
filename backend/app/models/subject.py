@@ -29,3 +29,6 @@ class Subject(Base):
     topics: Mapped[list["Topic"]] = relationship(
         "Topic", back_populates="subject", lazy="selectin",
     )
+    assignments: Mapped[list["Assignment"]] = relationship(
+        "Assignment", back_populates="course", lazy="selectin",
+    )

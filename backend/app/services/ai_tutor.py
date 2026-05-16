@@ -132,6 +132,36 @@ class AITutorService:
 
         return response.choices[0].message.content or ""
 
+    async def ask(self, prompt: str) -> str:
+        """Send a raw prompt to the AI and return the response."""
+        try:
+            response = await self.client.chat.completions.create(
+                model=settings.OPENAI_MODEL,
+                messages=[
+                    {
+                        "role": "system",
+                        "content": (
+                            "You are an expert AI tutor. Provide clear, "
+                            "constructive feedback to help students learn."
+                        ),
+                    },
+                    {"role": "user", "content": prompt},
+                ],
+                temperature=settings.OPENAI_TEMPERATURE,
+                max_tokens=settings.OPENAI_MAX_TOKENS,
+            )
+        except OpenAIRateLimitError as e:
+            raise AIServiceError(
+                "AI tutor is temporarily unavailable (rate limit). "
+                "Please try again later."
+            ) from e
+        except OpenAIAPIError as e:
+            raise AIServiceError(
+                f"AI tutor service error: {e.message}"
+            ) from e
+
+        return response.choices[0].message.content or ""
+
     @staticmethod
     def _build_prompt(
         question: str,
