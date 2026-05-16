@@ -28,6 +28,11 @@ class Settings(BaseSettings):
     OPENAI_MAX_TOKENS: int = 500
     OPENAI_TEMPERATURE: float = 0.7
 
+    # JWT
+    JWT_SECRET_KEY: str = "jwt-secret-key-change-in-production"
+    JWT_ALGORITHM: str = "HS256"
+    JWT_ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
+
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"

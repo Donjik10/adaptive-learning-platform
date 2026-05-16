@@ -1,14 +1,20 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const location = useLocation();
+  const { user, logout } = useAuth();
 
-  const navLinks = [
-    { path: "/", label: "Dashboard", icon: "📚" },
-    { path: "/teacher", label: "Teacher", icon: "🧑‍🏫" },
-    { path: "/tutor", label: "AI Tutor", icon: "💬" },
+  const allLinks = [
+    { path: "/", label: "Dashboard", icon: "📚", roles: ["student", "teacher", "admin"] },
+    { path: "/student-dashboard", label: "My Assignments", icon: "📝", roles: ["student"] },
+    { path: "/teacher", label: "Submissions", icon: "📋", roles: ["teacher", "admin"] },
+    { path: "/teacher/rules", label: "AI Rules", icon: "🧑‍🏫", roles: ["teacher", "admin"] },
+    { path: "/tutor", label: "AI Tutor", icon: "💬", roles: ["student", "teacher", "admin"] },
   ];
+
+  const navLinks = allLinks.filter((l) => user && l.roles.includes(user.role));
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -18,7 +24,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             <Link to="/" className="text-lg font-bold text-indigo-600">
               Adaptiv
             </Link>
-            <nav className="flex gap-1">
+            <nav className="flex gap-1 items-center">
               {navLinks.map((link) => {
                 const active = location.pathname === link.path;
                 return (
@@ -36,6 +42,19 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                   </Link>
                 );
               })}
+              {user && (
+                <div className="flex items-center gap-3 ml-4 border-l pl-4">
+                  <span className="text-xs text-gray-600">
+                    {user.name} ({user.role})
+                  </span>
+                  <button
+                    onClick={logout}
+                    className="text-xs text-red-500 hover:text-red-700 font-medium"
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
             </nav>
           </div>
         </div>

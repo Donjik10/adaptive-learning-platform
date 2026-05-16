@@ -16,13 +16,14 @@ const StudentTutorChat: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [question, setQuestion] = useState("");
   const [loading, setLoading] = useState(false);
+  const [loadError, setLoadError] = useState("");
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     apiClient.get("/subjects").then((r) => {
       setCourses(r.data);
       if (r.data.length > 0) setSelectedCourseId(r.data[0].id);
-    });
+    }).catch((e) => setLoadError(`Failed to load courses: ${e.message}`));
   }, []);
 
   useEffect(() => {
@@ -31,8 +32,12 @@ const StudentTutorChat: React.FC = () => {
 
   const handleAsk = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!question.trim() || !userId || !selectedCourseId) return;
+    if (!question.trim() || !userId || !selectedCourseId) {
+      if (!userId) setLoadError("Select a user on the Dashboard first");
+      return;
+    }
 
+    setLoadError("");
     const userMsg: Message = { role: "user", content: question };
     setMessages((prev) => [...prev, userMsg]);
     setQuestion("");
@@ -49,10 +54,11 @@ const StudentTutorChat: React.FC = () => {
         ...prev,
         { role: "assistant", content: data.answer, sources: data.sources },
       ]);
-    } catch {
+    } catch (e: any) {
+      const detail = e.response?.data?.detail || e.message || "Unknown error";
       setMessages((prev) => [
         ...prev,
-        { role: "assistant", content: "Sorry, something went wrong. Try again." },
+        { role: "assistant", content: `Error: ${detail}` },
       ]);
     }
     setLoading(false);
@@ -63,8 +69,7 @@ const StudentTutorChat: React.FC = () => {
       <div>
         <h1 className="text-2xl font-bold text-gray-900">💬 AI Tutor Chat</h1>
         <p className="mt-1 text-sm text-gray-500">
-          Ask the AI tutor anything about the course. The tutor answers strictly based on
-          the materials uploaded by your teacher.
+          Ask the AI tutor anything about the course. The tutor answers strictly based on the materials uploaded by your teacher.
         </p>
       </div>
 
@@ -73,11 +78,15 @@ const StudentTutorChat: React.FC = () => {
         <select value={selectedCourseId} onChange={(e) => setSelectedCourseId(e.target.value)}
           className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none"
         >
-          {courses.map((c) => (
-            <option key={c.id} value={c.id}>{c.name}</option>
-          ))}
+          {courses.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
         </select>
       </div>
+
+      {loadError && (
+        <div className="rounded-lg bg-red-50 border border-red-200 p-3 text-sm text-red-700">
+          {loadError}
+        </div>
+      )}
 
       <div className="rounded-xl border border-gray-200 bg-white shadow-sm flex flex-col h-[500px]">
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
@@ -86,14 +95,15 @@ const StudentTutorChat: React.FC = () => {
               <p className="text-3xl mb-2">💡</p>
               <p>Ask a question about the course material.</p>
               <p className="text-xs mt-1">
-                The AI will search the teacher's materials and answer within their guidelines.
+                Make sure you've uploaded materials in the{" "}
+                <a href="/teacher" className="text-indigo-600 underline">Teacher tab</a> first.
               </p>
             </div>
           )}
           {messages.map((msg, i) => (
             <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
               <div
-                className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
+                className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap ${
                   msg.role === "user"
                     ? "bg-indigo-600 text-white rounded-br-md"
                     : "bg-gray-100 text-gray-800 rounded-bl-md"
@@ -132,10 +142,7 @@ const StudentTutorChat: React.FC = () => {
         </div>
 
         <form onSubmit={handleAsk} className="border-t border-gray-200 p-4 flex gap-3">
-          <input
-            value={question}
-            onChange={(e) => setQuestion(e.target.value)}
-            disabled={loading}
+          <input value={question} onChange={(e) => setQuestion(e.target.value)} disabled={loading}
             className="flex-1 rounded-xl border border-gray-300 px-4 py-2.5 text-sm focus:border-indigo-500 focus:outline-none"
             placeholder="Ask about the course material..."
           />
