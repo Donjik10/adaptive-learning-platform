@@ -158,6 +158,23 @@ const translations: Record<Language, Record<string, string>> = {
     "review.streak": "Streak",
     "review.again": "Again",
     
+    // Videos
+    "nav.videos": "Videos",
+    "videos.manage": "Manage Videos",
+    "videos.addVideo": "Add Video",
+    "videos.videoTitle": "Video Title",
+    "videos.titlePlaceholder": "e.g. Introduction to Algebra",
+    "videos.videoDescription": "Description",
+    "videos.descPlaceholder": "Brief description of the video content...",
+    "videos.sourceType": "Video Source",
+    "videos.externalLink": "External Link (YouTube, etc.)",
+    "videos.uploadFile": "Upload File",
+    "videos.videoUrl": "Video URL",
+    "videos.uploadComingSoon": "File upload coming soon. Please use external links for now.",
+    "videos.yourVideos": "Your Videos",
+    "videos.noVideos": "No videos yet.",
+    "videos.watch": "Watch",
+
     // Settings
     "settings.language": "Language",
     "settings.russian": "Russian",
@@ -313,6 +330,23 @@ const translations: Record<Language, Record<string, string>> = {
     "review.streak": "Серия",
     "review.again": "Снова",
     
+    // Videos
+    "nav.videos": "Видео",
+    "videos.manage": "Управление видео",
+    "videos.addVideo": "Добавить видео",
+    "videos.videoTitle": "Название видео",
+    "videos.titlePlaceholder": "например, Введение в алгебру",
+    "videos.videoDescription": "Описание",
+    "videos.descPlaceholder": "Краткое описание содержания видео...",
+    "videos.sourceType": "Источник видео",
+    "videos.externalLink": "Внешняя ссылка (YouTube и др.)",
+    "videos.uploadFile": "Загрузить файл",
+    "videos.videoUrl": "Ссылка на видео",
+    "videos.uploadComingSoon": "Загрузка файлов скоро будет доступна. Используйте внешние ссылки.",
+    "videos.yourVideos": "Ваши видео",
+    "videos.noVideos": "Пока нет видео.",
+    "videos.watch": "Смотреть",
+
     // Settings
     "settings.language": "Язык",
     "settings.russian": "Русский",

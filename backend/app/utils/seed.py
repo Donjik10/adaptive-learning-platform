@@ -251,3 +251,57 @@ async def seed_demo_data(session: AsyncSession) -> None:
                 submission.status = SubmissionStatus.REVIEWED
 
     await session.flush()
+
+    # Demo video materials
+    from app.models.video_material import VideoMaterial, VideoSourceType
+
+    video_data = [
+        {
+            "course": subjects_list[0],
+            "title": "Introduction to Linear Equations",
+            "description": "Basic concepts of linear equations",
+            "source_type": VideoSourceType.EXTERNAL_LINK,
+            "external_url": "https://www.youtube.com/watch?v=td4jL0n5eZ4",
+        },
+        {
+            "course": subjects_list[0],
+            "title": "Solving Quadratic Equations",
+            "description": "Methods for solving quadratic equations",
+            "source_type": VideoSourceType.EXTERNAL_LINK,
+            "external_url": "https://www.youtube.com/watch?v=HZ4hfnqBAv0",
+        },
+        {
+            "course": subjects_list[1],
+            "title": "Newton's Laws of Motion",
+            "description": "Understanding the three laws of motion",
+            "source_type": VideoSourceType.EXTERNAL_LINK,
+            "external_url": "https://www.youtube.com/watch?v=kKKM8Y-u7ds",
+        },
+        {
+            "course": subjects_list[2],
+            "title": "English Grammar Basics",
+            "description": "Fundamental grammar rules",
+            "source_type": VideoSourceType.EXTERNAL_LINK,
+            "external_url": "https://www.youtube.com/watch?v=Ex6RPjoe1qA",
+        },
+        {
+            "course": subjects_list[3],
+            "title": "Python for Beginners",
+            "description": "Getting started with Python programming",
+            "source_type": VideoSourceType.EXTERNAL_LINK,
+            "external_url": "https://www.youtube.com/watch?v=rfscVS0vtbw",
+        },
+    ]
+
+    for vd in video_data:
+        video = VideoMaterial(
+            teacher_id=teacher_user.id,
+            course_id=vd["course"].id,
+            title=vd["title"],
+            description=vd["description"],
+            source_type=vd["source_type"],
+            external_url=vd["external_url"],
+        )
+        session.add(video)
+
+    await session.flush()

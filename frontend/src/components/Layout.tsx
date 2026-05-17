@@ -16,6 +16,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     { path: "/teacher", label: t("nav.submissions"), icon: "📋", roles: ["teacher", "admin"] },
     { path: "/teacher/rules", label: t("nav.aiRules"), icon: "🧑‍🏫", roles: ["teacher", "admin"] },
     { path: "/tutor", label: t("nav.aiTutor"), icon: "💬", roles: ["student", "teacher", "admin"] },
+    { path: "/videos", label: t("nav.videos"), icon: "🎬", roles: ["student", "teacher", "admin"] },
   ];
 
   const navLinks = allLinks.filter((l) => user && l.roles.includes(user.role));

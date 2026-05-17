@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Адаптивная платформа обучения с ИИ-репетитором</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/white.min.css">
+  <style>
+    :root {
+      --r-background-color: #f8fafc;
+      --r-main-font: 'Segoe UI', system-ui, sans-serif;
+      --r-heading-font: 'Segoe UI', system-ui, sans-serif;
+      --r-main-color: #1e293b;
+      --r-heading-color: #1e293b;
+      --r-link-color: #6366f1;
+    }
+    .reveal h1, .reveal h2, .reveal h3 { font-weight: 700; letter-spacing: -0.02em; }
+    .reveal h1 { font-size: 2.2em; }
+    .reveal h2 { font-size: 1.6em; color: #4f46e5; }
+    .reveal h3 { font-size: 1.2em; color: #6366f1; }
+    .reveal ul { list-style: none; padding-left: 0; }
+    .reveal li { margin: 0.5em 0; padding-left: 1.5em; position: relative; }
+    .reveal li::before { content: "▸"; position: absolute; left: 0; color: #6366f1; font-weight: bold; }
+    .reveal table { font-size: 0.7em; width: 100%; border-collapse: collapse; margin: 1em 0; }
+    .reveal th { background: #4f46e5; color: white; padding: 0.6em; text-align: left; }
+    .reveal td { padding: 0.5em; border-bottom: 1px solid #e2e8f0; }
+    .reveal tr:nth-child(even) { background: #f1f5f9; }
+    .badge { display: inline-block; padding: 0.2em 0.6em; border-radius: 999px; font-size: 0.75em; font-weight: 600; margin: 0.2em; }
+    .badge-blue { background: #dbeafe; color: #1e40af; }
+    .badge-green { background: #dcfce7; color: #166534; }
+    .badge-purple { background: #f3e8ff; color: #7c3aed; }
+    .badge-orange { background: #ffedd5; color: #9a3412; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 2em; text-align: left; }
+    .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1em; text-align: center; }
+    .feature-card { background: white; border-radius: 12px; padding: 1em; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .feature-card .icon { font-size: 2em; margin-bottom: 0.3em; }
+    .checklist { text-align: left; }
+    .checklist li::before { content: "✓"; color: #22c55e; }
+    .arch-box { background: white; border-radius: 12px; padding: 1em; margin: 0.5em; box-shadow: 0 2px 8px rgba(0,0,0,0.08); font-size: 0.75em; }
+    .arch-layer { display: flex; justify-content: center; gap: 1em; margin: 0.5em 0; }
+    code { background: #f1f5f9; padding: 0.2em 0.4em; border-radius: 4px; font-size: 0.85em; }
+    .reveal .slides { text-align: left; }
+    .reveal .slides section { padding: 2em; }
+    .center { text-align: center; }
+    .subtitle { font-size: 1.1em; color: #64748b; margin-top: 0.5em; }
+    .author { margin-top: 2em; font-size: 0.9em; color: #64748b; }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- Слайд 1: Титульный -->
+      <section class="center">
+        <div style="font-size: 4em; margin-bottom: 0.3em;">🧠</div>
+        <h1>Адаптивная платформа обучения<br><span style="color: #4f46e5;">с ИИ-репетитором</span></h1>
+        <p class="subtitle">LMS с интервальным повторением, RAG и ролевой моделью</p>
+        <div class="author">
+          <strong>Исламгареев Данил</strong><br>
+          БЭИ-2303
+        </div>
+      </section>
+
+      <!-- Слайд 2: Цель, задачи, инструменты -->
+      <section>
+        <h2>🎯 Цель, задачи и инструменты</h2>
+        
+        <div style="margin: 1em 0;">
+          <strong>Цель:</strong> Разработать LMS-платформу с адаптивным обучением, интервальным повторением и ИИ-репетитором на локальной модели
+        </div>
+
+        <div class="two-col">
+          <div>
+            <h3>Задачи</h3>
+            <ul>
+              <li>Ролевая модель (студент/учитель/админ)</li>
+              <li>Курсы с темами и карточками</li>
+              <li>Алгоритм SM-2 для повторений</li>
+              <li>ИИ-репетитор с RAG (Ollama)</li>
+              <li>Система ДЗ с чатом и ИИ-подхватом</li>
+              <li>Локализация RU/EN + темная тема</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Стек технологий</h3>
+            <div style="display: flex; flex-wrap: wrap; gap: 0.5em;">
+              <span class="badge badge-blue">FastAPI</span>
+              <span class="badge badge-green">React 18</span>
+              <span class="badge badge-purple">PostgreSQL</span>
+              <span class="badge badge-orange">Redis</span>
+              <span class="badge badge-blue">Docker</span>
+              <span class="badge badge-green">Ollama</span>
+              <span class="badge badge-purple">TypeScript</span>
+              <span class="badge badge-orange">Tailwind</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Слайд 3: Анализ проблемной области -->
+      <section>
+        <h2>📊 Анализ проблемной области</h2>
+
+        <div class="two-col">
+          <div>
+            <h3>Проблемы обучения</h3>
+            <ul>
+              <li>❌ Нет персонализации — один темп для всех</li>
+              <li>❌ Эффект забывания — 80% за неделю</li>
+              <li>❌ Нет интервального повторения</li>
+              <li>❌ Задержка обратной связи</li>
+              <li>❌ Не учитываются стили обучения</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Сравнение систем</h3>
+            <table>
+              <tr><th>Система</th><th>Недостаток</th></tr>
+              <tr><td>Anki</td><td>Только карточки, нет ИИ</td></tr>
+              <tr><td>Quizlet</td><td>Нет адаптивного алгоритма</td></tr>
+              <tr><td>Coursera</td><td>Пассивное видео, нет повторений</td></tr>
+              <tr><td>Khan Academy</td><td>Нет ИИ-репетитора с RAG</td></tr>
+            </table>
+          </div>
+        </div>
+
+        <div style="margin-top: 1em; padding: 0.8em; background: #eff6ff; border-radius: 8px; border-left: 4px solid #4f46e5;">
+          <strong>Вывод:</strong> На рынке отсутствует комплексное решение: курсы + SM-2 + ИИ + роли + ДЗ
+        </div>
+      </section>
+
+      <!-- Слайд 4: Архитектура -->
+      <section>
+        <h2>🏗️ Архитектура системы</h2>
+
+        <div style="text-align: center; margin: 1em 0;">
+          <div class="arch-box" style="background: #dbeafe; border: 2px solid #4f46e5;">
+            <strong>🖥️ React Frontend</strong><br>
+            Dashboard | Review | Homework | AI Tutor
+          </div>
+          <div style="text-align: center; color: #94a3b8;">↓ HTTP + JWT</div>
+          <div class="arch-box" style="background: #ede9fe; border: 2px solid #7c3aed;">
+            <strong>⚡ FastAPI Backend</strong><br>
+            Auth | Courses | SM-2 | AI | Homework | Chat
+          </div>
+          <div style="text-align: center; color: #94a3b8;">↓ SQL / Cache / LLM</div>
+          <div class="arch-layer">
+            <div class="arch-box" style="background: #dcfce7; border: 2px solid #22c55e;">
+              <strong>🐘 PostgreSQL</strong><br>Данные + эмбеддинги
+            </div>
+            <div class="arch-box" style="background: #fef3c7; border: 2px solid #f59e0b;">
+              <strong>⚡ Redis</strong><br>Кэш, сессии
+            </div>
+            <div class="arch-box" style="background: #fce7f3; border: 2px solid #ec4899;">
+              <strong>🤖 Ollama</strong><br>llama3.2:3b
+            </div>
+          </div>
+        </div>
+
+        <div class="feature-grid" style="margin-top: 1em;">
+          <div class="feature-card"><div class="icon">🔐</div><strong>Auth</strong><br>JWT + роли</div>
+          <div class="feature-card"><div class="icon">📚</div><strong>Courses</strong><br>Курсы + темы</div>
+          <div class="feature-card"><div class="icon">🃏</div><strong>SM-2</strong><br>Интервальное повторение</div>
+          <div class="feature-card"><div class="icon">🤖</div><strong>AI Tutor</strong><br>RAG + LLM</div>
+          <div class="feature-card"><div class="icon">📝</div><strong>Homework</strong><br>Задания + чат</div>
+          <div class="feature-card"><div class="icon">👨‍🏫</div><strong>Teacher</strong><br>Правила ИИ</div>
+        </div>
+      </section>
+
+      <!-- Слайд 5: Алгоритмы -->
+      <section>
+        <h2>🧠 Алгоритмы — изюминки системы</h2>
+
+        <div class="two-col">
+          <div>
+            <h3>SM-2 (SuperMemo-2)</h3>
+            <div style="background: #f8fafc; padding: 1em; border-radius: 8px; font-size: 0.8em;">
+              <code>
+              quality = correctness × time × confidence × streak
+              <br><br>
+              if quality ≥ 3:<br>
+              &nbsp;&nbsp;interval = interval × ease_factor<br>
+              else:<br>
+              &nbsp;&nbsp;interval = 1<br>
+              <br>
+              ease_factor += 0.1 - (5-q)×(0.08+(5-q)×0.02)
+              </code>
+            </div>
+            <p style="font-size: 0.8em; margin-top: 0.5em;">Автоподстройка интервалов под каждого студента</p>
+          </div>
+          <div>
+            <h3>RAG Pipeline</h3>
+            <ol style="font-size: 0.85em;">
+              <li>📄 Chunking: 400 слов, overlap 50</li>
+              <li>🔢 Embeddings: Ollama /v1/embeddings</li>
+              <li>🔍 Search: косинусное сходство</li>
+              <li>💬 Generation: LLM + контекст</li>
+            </ol>
+
+            <h3>ИИ-Подхват</h3>
+            <div style="font-size: 0.8em;">
+              Студент → Отправка ДЗ → Чат →<br>
+              → Учитель отвечает? ✅<br>
+              → Нет? → ИИ проверяет автоматически ⚡
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Слайд 6: Как пользоваться -->
+      <section>
+        <h2>👤 Как пользоваться системой</h2>
+
+        <div class="two-col">
+          <div style="background: #eff6ff; padding: 1em; border-radius: 12px;">
+            <h3>🎓 Студент</h3>
+            <ol>
+              <li>Вход (demo@student.com)</li>
+              <li>Dashboard → выбор курса</li>
+              <li>Review: Space — перевернуть, 1/2 — ответ</li>
+              <li>My Assignments → отправка решений</li>
+              <li>Чат: обсуждение или ⚡ ИИ-проверка</li>
+            </ol>
+          </div>
+          <div style="background: #fef3c7; padding: 1em; border-radius: 12px;">
+            <h3>👨‍🏫 Учитель</h3>
+            <ol>
+              <li>Вход (demo@teacher.com)</li>
+              <li>Submissions — проверка работ</li>
+              <li>AI Rules — загрузка материалов</li>
+              <li>Настройка промпта для ИИ</li>
+              <li>Чат — обратная связь студентам</li>
+            </ol>
+          </div>
+        </div>
+
+        <div style="margin-top: 1em; text-align: center;">
+          <span class="badge badge-blue">🌐 RU/EN</span>
+          <span class="badge badge-purple">🌙 Темная тема</span>
+          <span class="badge badge-green">🤖 Локальный ИИ</span>
+          <span class="badge badge-orange">📊 Статистика</span>
+        </div>
+      </section>
+
+      <!-- Слайд 7: Результаты -->
+      <section>
+        <h2>✅ Результаты</h2>
+
+        <div class="checklist">
+          <ul>
+            <li>Ролевая модель с JWT-аутентификацией</li>
+            <li>4 курса, 14 тем, 42 карточки (демо)</li>
+            <li>SM-2 с авторасчетом качества ответа</li>
+            <li>ИИ-репетитор на llama3.2:3b (Ollama)</li>
+            <li>RAG с косинусным поиском и strict mode</li>
+            <li>Система ДЗ с чатом и ИИ-подхватом</li>
+            <li>Локализация RU/EN + темная тема</li>
+          </ul>
+        </div>
+
+        <div style="margin-top: 1.5em; padding: 1em; background: #ede9fe; border-radius: 12px; text-align: center;">
+          <div style="font-size: 1.2em; font-weight: 700; color: #4f46e5;">
+            FastAPI + React + PostgreSQL + Redis + Docker + Ollama
+          </div>
+          <div style="margin-top: 0.5em; font-size: 0.9em; color: #64748b;">
+            GitHub: github.com/Donjik10/adaptive-learning-platform
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: 'c/t',
+      transition: 'slide',
+      width: 1280,
+      height: 720,
+      margin: 0.1,
+    });
+  </script>
+</body>
+</html>
