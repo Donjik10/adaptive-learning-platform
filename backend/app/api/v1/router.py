@@ -11,6 +11,7 @@ from app.api.v1.endpoints import (
     topics,
     tutor,
     users,
+    videos,
 )
 
 api_router = APIRouter()
@@ -24,4 +25,5 @@ api_router.include_router(reviews.router, prefix="/reviews", tags=["Reviews"])
 api_router.include_router(homework.router, tags=["Homework"])
 api_router.include_router(ai_tutor.router, prefix="/ai-tutor", tags=["AI Tutor"])
 api_router.include_router(teacher.router, prefix="/teacher", tags=["Teacher"])
+api_router.include_router(videos.router, tags=["Videos"])
 api_router.include_router(tutor.router, prefix="/tutor", tags=["Tutor"])

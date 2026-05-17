@@ -10,6 +10,7 @@ from app.models.submission import Submission, SubmissionStatus
 from app.models.teacher_rule import TeacherRule
 from app.models.topic import Topic
 from app.models.user import User, UserRole
+from app.models.video_material import VideoMaterial, VideoSourceType
 
 __all__ = [
     "Assignment",
@@ -27,4 +28,6 @@ __all__ = [
     "Topic",
     "User",
     "UserRole",
+    "VideoMaterial",
+    "VideoSourceType",
 ]

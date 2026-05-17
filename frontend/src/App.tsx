@@ -8,11 +8,13 @@ import Dashboard from "pages/Dashboard";
 import ReviewPage from "pages/ReviewPage";
 import TeacherDashboard from "pages/TeacherDashboard";
 import TeacherSubmissions from "pages/TeacherSubmissions";
+import TeacherVideosPage from "pages/TeacherVideosPage";
 import StudentTutorChat from "pages/StudentTutorChat";
 import LoginPage from "pages/LoginPage";
 import StudentDashboard from "pages/StudentDashboard";
 import HomeworkWorkspace from "pages/HomeworkWorkspace";
 import NewSubmissionPage from "pages/NewSubmissionPage";
+import VideosPage from "pages/VideosPage";
 
 const RequireAuth: React.FC<{ children: React.ReactNode; role?: "student" | "teacher" | "admin" }> = ({
   children,
@@ -122,6 +124,26 @@ const AppRoutes: React.FC = () => {
           <RequireAuth role="student">
             <Layout>
               <NewSubmissionPage />
+            </Layout>
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/videos"
+        element={
+          <RequireAuth>
+            <Layout>
+              <VideosPage />
+            </Layout>
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/teacher/videos"
+        element={
+          <RequireAuth role="teacher">
+            <Layout>
+              <TeacherVideosPage />
             </Layout>
           </RequireAuth>
         }
