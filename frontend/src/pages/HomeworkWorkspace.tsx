@@ -134,6 +134,24 @@ const HomeworkWorkspace: React.FC<HomeworkWorkspaceProps> = ({ submissionId }) =
                 {submission.content_text || t("homework.noText")}
               </p>
             </div>
+            
+                {/* Attached File */}
+                {submission.file_url && (
+                  <div className="mb-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xl">📎</span>
+                      <a
+                        href={`http://localhost:8000${submission.file_url}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-blue-600 dark:text-blue-400 hover:underline font-medium"
+                      >
+                        {t("homework.attachedFile") || "Attached file"}
+                      </a>
+                    </div>
+                  </div>
+                )}
+            
             <div className="flex items-center gap-2">
               <span className="text-sm font-medium text-gray-600 dark:text-gray-400">{t("status")}:</span>
               <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getStatusColor(submission.status)}`}>

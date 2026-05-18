@@ -100,9 +100,16 @@ const TeacherSubmissions: React.FC = () => {
               className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 cursor-pointer hover:shadow-md transition"
             >
               <div className="flex items-center justify-between mb-2">
-                <h3 className="font-medium text-gray-800 dark:text-gray-200">
-                  {getAssignmentTitle(sub.assignment_id)}
-                </h3>
+                <div className="flex items-center gap-2">
+                  <h3 className="font-medium text-gray-800 dark:text-gray-200">
+                    {getAssignmentTitle(sub.assignment_id)}
+                  </h3>
+                  {sub.file_url && (
+                    <span className="text-blue-500 dark:text-blue-400" title={t("homework.hasAttachment") || "Has attachment"}>
+                      📎
+                    </span>
+                  )}
+                </div>
                 <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(sub.status)}`}>
                   {getStatusText(sub.status)}
                 </span>

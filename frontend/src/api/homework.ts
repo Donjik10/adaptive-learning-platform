@@ -1,4 +1,3 @@
-import React, { useEffect, useRef, useState } from "react";
 import apiClient from "./client";
 
 export interface Assignment {
@@ -50,3 +49,11 @@ export const postChatMessage = (submissionId: string, message_text: string) =>
 
 export const requestAIReview = (submissionId: string) =>
   apiClient.post<ChatMessage>(`/homework/submissions/${submissionId}/chat/ai-review`);
+
+export const uploadFile = (file: File) => {
+  const formData = new FormData();
+  formData.append("file", file);
+  return apiClient.post<{ filename: string; url: string }>("/uploads", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+};
