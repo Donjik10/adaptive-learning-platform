@@ -4,22 +4,83 @@ import { useAuth } from "../context/AuthContext";
 import { useTranslation } from "../context/LanguageContext";
 import { useTheme } from "../context/ThemeContext";
 
+interface NavItem {
+  path: string;
+  label: string;
+  icon: string;
+  roles: string[];
+  section?: string;
+}
+
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const location = useLocation();
   const { user, logout } = useAuth();
   const { t, language, setLanguage } = useTranslation();
   const { theme, toggleTheme } = useTheme();
 
-  const allLinks = [
-    { path: "/", label: t("nav.dashboard"), icon: "📚", roles: ["student", "teacher", "admin"] },
-    { path: "/student-dashboard", label: t("nav.myAssignments"), icon: "📝", roles: ["student"] },
-    { path: "/teacher", label: t("nav.submissions"), icon: "📋", roles: ["teacher", "admin"] },
-    { path: "/teacher/rules", label: t("nav.aiRules"), icon: "🧑‍🏫", roles: ["teacher", "admin"] },
-    { path: "/tutor", label: t("nav.aiTutor"), icon: "💬", roles: ["student", "teacher", "admin"] },
-    { path: "/videos", label: t("nav.videos"), icon: "🎬", roles: ["student", "teacher", "admin"] },
+  const allLinks: NavItem[] = [
+    // Student section
+    { path: "/student-dashboard", label: t("nav.myAssignments"), icon: "📝", roles: ["student"], section: "student" },
+    { path: "/tutor", label: t("nav.aiTutor"), icon: "💬", roles: ["student"], section: "student" },
+    { path: "/videos", label: t("nav.videos"), icon: "🎬", roles: ["student"], section: "student" },
+    
+    // Teacher section
+    { path: "/teacher", label: t("nav.submissions"), icon: "📋", roles: ["teacher", "admin"], section: "teacher" },
+    { path: "/teacher/videos", label: t("nav.teacherVideos"), icon: "🎥", roles: ["teacher", "admin"], section: "teacher" },
+    { path: "/teacher/rules", label: t("nav.aiRules"), icon: "🧑‍🏫", roles: ["teacher", "admin"], section: "teacher" },
+    
+    // Common section (Dashboard for all)
+    { path: "/", label: t("nav.dashboard"), icon: "📚", roles: ["student", "teacher", "admin"], section: "common" },
   ];
 
-  const navLinks = allLinks.filter((l) => user && l.roles.includes(user.role));
+  const filteredLinks = allLinks.filter((l) => user && l.roles.includes(user.role));
+  
+  // Group by section
+  const studentLinks = filteredLinks.filter((l) => l.section === "student");
+  const teacherLinks = filteredLinks.filter((l) => l.section === "teacher");
+  const commonLinks = filteredLinks.filter((l) => l.section === "common");
+
+  const getRoleBadge = () => {
+    if (!user) return null;
+    const roleColors: Record<string, string> = {
+      student: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
+      teacher: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400",
+      admin: "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400",
+    };
+    return (
+      <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${roleColors[user.role] || roleColors.student}`}>
+        {t(user.role)}
+      </span>
+    );
+  };
+
+  const renderNavLink = (link: NavItem) => {
+    const active = location.pathname === link.path;
+    const isTeacherItem = link.section === "teacher";
+    const isStudentItem = link.section === "student";
+    
+    let activeClass = "bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300";
+    if (isTeacherItem) {
+      activeClass = "bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300";
+    } else if (isStudentItem) {
+      activeClass = "bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300";
+    }
+
+    return (
+      <Link
+        key={link.path}
+        to={link.path}
+        className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors
+          ${active
+            ? activeClass
+            : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+          }`}
+      >
+        <span>{link.icon}</span>
+        {link.label}
+      </Link>
+    );
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
@@ -30,23 +91,31 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
               {t("app.name")}
             </Link>
             <nav className="flex gap-1 items-center">
-              {navLinks.map((link) => {
-                const active = location.pathname === link.path;
-                return (
-                  <Link
-                    key={link.path}
-                    to={link.path}
-                    className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors
-                      ${active
-                        ? "bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300"
-                        : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
-                      }`}
-                  >
-                    <span>{link.icon}</span>
-                    {link.label}
-                  </Link>
-                );
-              })}
+              {/* Common links */}
+              {commonLinks.map(renderNavLink)}
+              
+              {/* Student section */}
+              {studentLinks.length > 0 && (
+                <>
+                  <div className="w-px h-4 bg-gray-300 dark:bg-gray-600 mx-1" />
+                  <span className="text-[10px] font-bold text-blue-500 dark:text-blue-400 uppercase tracking-wider px-1">
+                    {t("student")}
+                  </span>
+                  {studentLinks.map(renderNavLink)}
+                </>
+              )}
+              
+              {/* Teacher section */}
+              {teacherLinks.length > 0 && (
+                <>
+                  <div className="w-px h-4 bg-gray-300 dark:bg-gray-600 mx-1" />
+                  <span className="text-[10px] font-bold text-emerald-500 dark:text-emerald-400 uppercase tracking-wider px-1">
+                    {t("teacher")}
+                  </span>
+                  {teacherLinks.map(renderNavLink)}
+                </>
+              )}
+              
               <div className="flex items-center gap-2 ml-4 border-l border-gray-200 dark:border-gray-600 pl-4">
                 {/* Theme Toggle */}
                 <button
@@ -75,6 +144,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
                 {user && (
                   <>
+                    {getRoleBadge()}
                     <span className="text-xs text-gray-600 dark:text-gray-300">
                       {user.name}
                     </span>
