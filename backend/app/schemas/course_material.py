@@ -8,6 +8,8 @@ class CourseMaterialRead(BaseModel):
     teacher_id: UUID
     course_id: UUID
     filename: str
+    content_text: str | None
+    file_url: str | None
     created_at: datetime
     model_config = {"from_attributes": True}
 

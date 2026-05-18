@@ -26,6 +26,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     
     // Teacher section
     { path: "/teacher", label: t("nav.submissions"), icon: "📋", roles: ["teacher", "admin"], section: "teacher" },
+    { path: "/teacher/assignments/new", label: t("nav.createAssignment") || "+ Assignment", icon: "➕", roles: ["teacher", "admin"], section: "teacher" },
     { path: "/teacher/videos", label: t("nav.teacherVideos"), icon: "🎥", roles: ["teacher", "admin"], section: "teacher" },
     { path: "/teacher/rules", label: t("nav.aiRules"), icon: "🧑‍🏫", roles: ["teacher", "admin"], section: "teacher" },
     

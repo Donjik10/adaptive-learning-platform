@@ -32,6 +32,9 @@ export const listAssignments = (courseId?: string) =>
 export const getAssignment = (id: string) =>
   apiClient.get<Assignment>(`/homework/assignments/${id}`);
 
+export const createAssignment = (data: { course_id: string; title: string; description?: string; deadline?: string }) =>
+  apiClient.post<Assignment>("/homework/assignments", data);
+
 export const createSubmission = (data: { assignment_id: string; content_text?: string; file_url?: string }) =>
   apiClient.post<Submission>("/homework/submissions", data);
 
