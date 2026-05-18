@@ -93,12 +93,14 @@ class RAGService:
 
     async def upload_material(
         self, teacher_id: UUID, course_id: UUID, filename: str, content: str,
+        file_url: str | None = None,
     ) -> CourseMaterial:
         mat = CourseMaterial(
             teacher_id=teacher_id,
             course_id=course_id,
             filename=filename,
             content_text=content,
+            file_url=file_url,
         )
         self.session.add(mat)
         await self.session.flush()

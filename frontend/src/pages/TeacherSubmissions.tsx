@@ -65,7 +65,15 @@ const TeacherSubmissions: React.FC = () => {
       </h1>
 
       <div className="mb-8">
-        <h2 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-3">{t("teacher.yourAssignments")}</h2>
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-lg font-semibold text-gray-700 dark:text-gray-300">{t("teacher.yourAssignments")}</h2>
+          <button
+            onClick={() => navigate("/teacher/assignments/new")}
+            className="px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm font-medium hover:bg-emerald-700 transition"
+          >
+            ➕ {t("teacher.createAssignment") || "Create Assignment"}
+          </button>
+        </div>
         <div className="grid gap-3">
           {assignments.map((a) => (
             <div

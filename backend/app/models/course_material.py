@@ -29,7 +29,8 @@ class CourseMaterial(Base):
         index=True,
     )
     filename: Mapped[str] = mapped_column(String(256), nullable=False)
-    content_text: Mapped[str] = mapped_column(Text, nullable=False)
+    content_text: Mapped[str | None] = mapped_column(Text, nullable=True)
+    file_url: Mapped[str | None] = mapped_column(String(512), nullable=True)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(),
     )

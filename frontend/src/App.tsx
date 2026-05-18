@@ -15,6 +15,7 @@ import StudentDashboard from "pages/StudentDashboard";
 import HomeworkWorkspace from "pages/HomeworkWorkspace";
 import NewSubmissionPage from "pages/NewSubmissionPage";
 import VideosPage from "pages/VideosPage";
+import CreateAssignmentPage from "pages/CreateAssignmentPage";
 
 const RequireAuth: React.FC<{ children: React.ReactNode; role?: "student" | "teacher" | "admin" }> = ({
   children,
@@ -144,6 +145,16 @@ const AppRoutes: React.FC = () => {
           <RequireAuth role="teacher">
             <Layout>
               <TeacherVideosPage />
+            </Layout>
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/teacher/assignments/new"
+        element={
+          <RequireAuth role="teacher">
+            <Layout>
+              <CreateAssignmentPage />
             </Layout>
           </RequireAuth>
         }
