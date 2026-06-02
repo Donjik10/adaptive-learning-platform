@@ -25,3 +25,7 @@ Thumbs.db
 
 # Docker (локальные volumes)
 docker-compose.override.yml
+
+# Логи
+logs/
+backend/logs/
