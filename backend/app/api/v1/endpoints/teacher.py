@@ -7,7 +7,7 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.v1.dependencies import get_current_active_user, require_role
+from app.api.v1.dependencies import require_role
 from app.database import get_async_session
 from app.models.user import User, UserRole
 from app.schemas.course_material import CourseMaterialRead, CourseMaterialUpload
@@ -23,7 +23,6 @@ UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 ALLOWED_EXTENSIONS = {".txt", ".md", ".csv", ".pdf", ".docx", ".doc", ".json", ".xml", ".html", ".htm"}
 MAX_FILE_SIZE = 50 * 1024 * 1024  # 50 MB
 
-
 @router.put("/rules/{teacher_id}", response_model=TeacherRuleRead)
 async def upsert_rule(
     teacher_id: UUID,
@@ -37,7 +36,6 @@ async def upsert_rule(
         body.ai_persona_prompt, body.strict_mode_enabled,
     )
 
-
 @router.get("/rules/{teacher_id}/{course_id}", response_model=TeacherRuleRead | None)
 async def get_rule(
     teacher_id: UUID,
@@ -47,7 +45,6 @@ async def get_rule(
     """Get the teacher's rule for a specific course."""
     svc = RAGService(session)
     return await svc.get_rule(teacher_id, course_id)
-
 
 @router.post("/materials", response_model=CourseMaterialRead)
 async def upload_material(
@@ -65,7 +62,6 @@ async def upload_material(
     )
     return mat
 
-
 @router.post("/materials/file", response_model=CourseMaterialRead)
 async def upload_material_file(
     course_id: UUID,
@@ -74,7 +70,6 @@ async def upload_material_file(
     session: AsyncSession = Depends(get_async_session),
 ):
     """Upload a file as course material. Extracts text and creates embeddings."""
-    # Validate file extension
     ext = Path(file.filename or "").suffix.lower()
     if ext not in ALLOWED_EXTENSIONS:
         raise HTTPException(
@@ -90,17 +85,14 @@ async def upload_material_file(
             detail=f"File too large. Max size: {MAX_FILE_SIZE // 1024 // 1024} MB",
         )
 
-    # Save file to disk
     unique_name = f"{uuid.uuid4().hex}_{datetime.now().strftime('%Y%m%d_%H%M%S')}{ext}"
     file_path = UPLOAD_DIR / unique_name
     with open(file_path, "wb") as f:
         f.write(content)
 
-    # Extract text from file
     try:
         text_content = extract_text_from_file(file_path, file.filename)
     except Exception as e:
-        # Clean up saved file on extraction error
         file_path.unlink(missing_ok=True)
         raise HTTPException(
             status_code=400,
@@ -124,7 +116,6 @@ async def upload_material_file(
         file_url=f"/uploads/materials/{unique_name}",
     )
     return mat
-
 
 @router.get("/materials/{course_id}", response_model=list[CourseMaterialRead])
 async def list_materials(

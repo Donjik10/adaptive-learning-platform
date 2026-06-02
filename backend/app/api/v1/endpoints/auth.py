@@ -1,7 +1,7 @@
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, ConfigDict, EmailStr, field_validator
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -19,6 +19,20 @@ class RegisterRequest(BaseModel):
     password: str
     role: UserRole = UserRole.STUDENT
 
+    @field_validator("name")
+    @classmethod
+    def no_empty(cls, v: str) -> str:
+        if not v.strip():
+            raise ValueError("Name cannot be empty")
+        return v.strip()
+
+    @field_validator("password")
+    @classmethod
+    def min_length(cls, v: str) -> str:
+        if len(v) < 6:
+            raise ValueError("Password must be at least 6 characters")
+        return v
+
 
 class LoginRequest(BaseModel):
     email: EmailStr
@@ -35,13 +49,12 @@ class TokenResponse(BaseModel):
 
 
 class UserResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: str
     name: str
     email: str
     role: str
-
-    class Config:
-        from_attributes = True
 
 
 @router.post("/register", response_model=TokenResponse, status_code=status.HTTP_201_CREATED)

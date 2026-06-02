@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+    paths: ["backend/**"]
+  pull_request:
+    branches: [main, master]
+    paths: ["backend/**"]
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_USER: ai_platform
+          POSTGRES_PASSWORD: ai_platform_secret
+          POSTGRES_DB: ai_platform
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 5
+
+    defaults:
+      run:
+        working-directory: ./backend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+
+      - name: Lint with ruff
+        run: ruff check .
+
+      - name: Type-check with mypy
+        run: mypy app/ tests/
+        continue-on-error: true
+
+      - name: Run tests with pytest
+        env:
+          DATABASE_URL: postgresql+asyncpg://ai_platform:ai_platform_secret@localhost:5432/ai_platform
+          OPENAI_BASE_URL: ""
+          JWT_SECRET_KEY: test-secret
+        run: pytest -v --tb=short

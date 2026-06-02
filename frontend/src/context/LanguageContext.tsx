@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState } from "react";
 
 export type Language = "ru" | "en";
 
@@ -197,7 +197,6 @@ const translations: Record<Language, Record<string, string>> = {
     "videos.noVideos": "No videos yet.",
     "videos.watch": "Watch",
 
-    // Settings
     "settings.language": "Language",
     "settings.russian": "Russian",
     "settings.english": "English",
@@ -391,7 +390,6 @@ const translations: Record<Language, Record<string, string>> = {
     "videos.noVideos": "Пока нет видео.",
     "videos.watch": "Смотреть",
 
-    // Settings
     "settings.language": "Язык",
     "settings.russian": "Русский",
     "settings.english": "English",

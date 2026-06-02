@@ -1,7 +1,7 @@
 from datetime import datetime
 from uuid import UUID
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict, field_validator
 
 
 class TopicCreate(BaseModel):
@@ -10,6 +10,13 @@ class TopicCreate(BaseModel):
     name: str
     description: str | None = None
     order_index: int = 0
+
+    @field_validator("name")
+    @classmethod
+    def no_empty(cls, v: str) -> str:
+        if not v.strip():
+            raise ValueError("Name cannot be empty")
+        return v.strip()
 
 
 class TopicUpdate(BaseModel):
@@ -20,6 +27,8 @@ class TopicUpdate(BaseModel):
 
 
 class TopicRead(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: UUID
     subject_id: UUID
     parent_topic_id: UUID | None
@@ -28,11 +37,7 @@ class TopicRead(BaseModel):
     order_index: int
     created_at: datetime
 
-    model_config = {"from_attributes": True}
-
 
 class TopicTree(TopicRead):
     """Topic with nested children for graph rendering."""
     children: list["TopicTree"] = []
-
-    model_config = {"from_attributes": True}

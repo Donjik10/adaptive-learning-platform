@@ -3,11 +3,11 @@ import math
 from uuid import UUID
 
 from httpx import AsyncClient
+from loguru import logger
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config import settings
-from app.core.exceptions import AIServiceError, NotFoundError
 from app.models.course_material import CourseMaterial
 from app.models.document_chunk import DocumentChunk
 from app.models.teacher_rule import TeacherRule
@@ -33,10 +33,6 @@ class RAGService:
     def __init__(self, session: AsyncSession):
         self.session = session
 
-    # ────────────────────────────────
-    #  Embedding (Ollama local model)
-    # ────────────────────────────────
-
     async def _embed(self, text: str) -> list[float]:
         url = OLLAMA_EMBED_URL
         if not url:
@@ -54,10 +50,6 @@ class RAGService:
             if is_openai_compat:
                 return data.get("data", [{}])[0].get("embedding", [])
             return data.get("embedding", [])
-
-    # ────────────────────────────────
-    #  Teacher: upsert rule
-    # ────────────────────────────────
 
     async def upsert_rule(
         self, teacher_id: UUID, course_id: UUID,
@@ -87,14 +79,11 @@ class RAGService:
         )
         return result.scalar_one_or_none()
 
-    # ────────────────────────────────
-    #  Teacher: upload material
-    # ────────────────────────────────
-
     async def upload_material(
         self, teacher_id: UUID, course_id: UUID, filename: str, content: str,
         file_url: str | None = None,
     ) -> CourseMaterial:
+        logger.info("Uploading material: {} ({})", filename, len(content.split()), "words")
         mat = CourseMaterial(
             teacher_id=teacher_id,
             course_id=course_id,
@@ -106,6 +95,7 @@ class RAGService:
         await self.session.flush()
 
         chunks = self._chunk_text(content)
+        logger.debug("Chunked into {} fragments", len(chunks))
         for i, chunk_text in enumerate(chunks):
             embedding = await self._embed(chunk_text)
             doc = DocumentChunk(
@@ -115,6 +105,7 @@ class RAGService:
                 embedding=json.dumps(embedding),
             )
             self.session.add(doc)
+        logger.info("Material {} indexed with {} chunks", mat.id, len(chunks))
         await self.session.flush()
         return mat
 
@@ -125,10 +116,6 @@ class RAGService:
             .order_by(CourseMaterial.created_at.desc()),
         )
         return list(result.scalars().all())
-
-    # ────────────────────────────────
-    #  Student: ask a question (RAG)
-    # ────────────────────────────────
 
     async def ask(
         self, user_id: UUID, course_id: UUID, question: str,
@@ -191,10 +178,6 @@ class RAGService:
 
         answer = response.choices[0].message.content or ""
         return answer, sources
-
-    # ────────────────────────────────
-    #  Internals
-    # ────────────────────────────────
 
     async def _get_rule_for_course(self, course_id: UUID) -> TeacherRule | None:
         result = await self.session.execute(

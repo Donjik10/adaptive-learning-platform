@@ -1,7 +1,7 @@
 from datetime import datetime
 from uuid import UUID
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict, field_validator
 
 
 class FlashcardCreate(BaseModel):
@@ -9,6 +9,13 @@ class FlashcardCreate(BaseModel):
     question: str
     answer: str
     explanation_prompt: str | None = None
+
+    @field_validator("question", "answer")
+    @classmethod
+    def no_empty(cls, v: str) -> str:
+        if not v.strip():
+            raise ValueError("Field cannot be empty")
+        return v.strip()
 
 
 class FlashcardUpdate(BaseModel):
@@ -18,11 +25,11 @@ class FlashcardUpdate(BaseModel):
 
 
 class FlashcardRead(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: UUID
     topic_id: UUID
     question: str
     answer: str
     explanation_prompt: str | None
     created_at: datetime
-
-    model_config = {"from_attributes": True}
