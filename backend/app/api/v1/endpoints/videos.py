@@ -7,9 +7,8 @@ from pydantic import BaseModel, ConfigDict
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.v1.dependencies import get_current_active_user, require_role
+from app.api.v1.dependencies import require_role
 from app.database import get_async_session
-from app.models.subject import Subject
 from app.models.user import User, UserRole
 from app.models.video_material import VideoMaterial, VideoSourceType
 

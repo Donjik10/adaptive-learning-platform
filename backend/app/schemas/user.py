@@ -1,7 +1,7 @@
 from datetime import datetime
 from uuid import UUID
 
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, ConfigDict, EmailStr, field_validator
 
 
 class UserCreate(BaseModel):
@@ -9,6 +9,20 @@ class UserCreate(BaseModel):
     email: EmailStr
     learning_style: str | None = None
     daily_study_limit: float | None = 60.0
+
+    @field_validator("name")
+    @classmethod
+    def no_empty(cls, v: str) -> str:
+        if not v.strip():
+            raise ValueError("Name cannot be empty")
+        return v.strip()
+
+    @field_validator("daily_study_limit")
+    @classmethod
+    def positive(cls, v: float | None) -> float | None:
+        if v is not None and v <= 0:
+            raise ValueError("daily_study_limit must be positive")
+        return v
 
 
 class UserUpdate(BaseModel):
@@ -18,6 +32,8 @@ class UserUpdate(BaseModel):
 
 
 class UserRead(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: UUID
     name: str
     email: str
@@ -25,5 +41,3 @@ class UserRead(BaseModel):
     daily_study_limit: float | None
     created_at: datetime
     updated_at: datetime
-
-    model_config = {"from_attributes": True}

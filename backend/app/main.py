@@ -1,15 +1,26 @@
+import sys
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
+from loguru import logger
 
 from app.api.v1.router import api_router
 from app.config import settings
 from app.core.exceptions import AIServiceError, DuplicateError, NotFoundError
 from app.database import async_session_factory, init_db
 from app.utils.seed import seed_demo_data
+
+logger.remove()
+logger.add(
+    sys.stderr,
+    format="<green>{time:HH:mm:ss}</green> | <level>{level:<8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan> | {message}",
+    level="DEBUG" if settings.DEBUG else "INFO",
+    colorize=True,
+)
+logger.add("logs/app.log", rotation="10 MB", retention="7 days", level="INFO")
 
 
 @asynccontextmanager
@@ -18,10 +29,12 @@ async def lifespan(app: FastAPI):
     Lifespan handler that initialises the database on startup
     and performs cleanup on shutdown.
     """
+    logger.info("Initializing database...")
     await init_db()
     async with async_session_factory() as session:
         await seed_demo_data(session)
         await session.commit()
+    logger.info("Application startup complete. Ready to serve.")
     yield
 
 

@@ -23,10 +23,6 @@ class SM2Service:
     def __init__(self, session: AsyncSession):
         self.session = session
 
-    # ──────────────────────────────────────────────
-    #  Quality calculation (modified SM-2)
-    # ──────────────────────────────────────────────
-
     def compute_quality(
         self,
         is_correct: bool,
@@ -83,10 +79,6 @@ class SM2Service:
             return 0.1
         return 0.0
 
-    # ──────────────────────────────────────────────
-    #  Single-review processing
-    # ──────────────────────────────────────────────
-
     async def process_review(
         self,
         user_id: UUID,
@@ -129,10 +121,6 @@ class SM2Service:
         await self.session.flush()
 
         return result
-
-    # ──────────────────────────────────────────────
-    #  Retroactive batch analysis
-    # ──────────────────────────────────────────────
 
     async def recalculate_from_history(
         self,
@@ -191,10 +179,6 @@ class SM2Service:
             repetitions=reps,
             next_review_at=next_review,
         )
-
-    # ──────────────────────────────────────────────
-    #  Helpers
-    # ──────────────────────────────────────────────
 
     async def _get_or_create_sm2(
         self, user_id: UUID, flashcard_id: UUID,

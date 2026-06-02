@@ -6,7 +6,6 @@ from app.models.subject import Subject
 from app.models.topic import Topic
 from app.models.user import User, UserRole
 
-
 async def seed_demo_data(session: AsyncSession) -> None:
     result = await session.execute(select(Subject).limit(1))
     if result.scalar_one_or_none() is not None:
@@ -26,7 +25,6 @@ async def seed_demo_data(session: AsyncSession) -> None:
     session.add(user)
     await session.flush()
 
-    # Create a teacher user
     teacher_user = User(
         name="Demo Teacher",
         email="demo@teacher.com",
@@ -208,7 +206,6 @@ async def seed_demo_data(session: AsyncSession) -> None:
         session.add(assignment)
         await session.flush()
 
-        # Create a submission for the first 3 assignments
         if idx < 3:
             submission = Submission(
                 assignment_id=assignment.id,
