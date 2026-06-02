@@ -1,11 +1,17 @@
+from __future__ import annotations
+
 import uuid
 from datetime import datetime
+from typing import TYPE_CHECKING
 
 from sqlalchemy import DateTime, ForeignKey, Integer, Text, func
-from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
+
+if TYPE_CHECKING:
+    from app.models.course_material import CourseMaterial
 
 
 class DocumentChunk(Base):
@@ -34,6 +40,6 @@ class DocumentChunk(Base):
     # JSON-массив float, например [0.01, -0.03, ...]
     embedding: Mapped[str | None] = mapped_column(Text, nullable=True)
 
-    material: Mapped["CourseMaterial"] = relationship(
+    material: Mapped[CourseMaterial] = relationship(
         "CourseMaterial", back_populates="chunks",
     )

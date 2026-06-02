@@ -151,7 +151,11 @@ class RAGService:
                 [],
             )
 
-        user_prompt = f"## Context materials\n{context_block}\n\n## Student question\n{question}\n\n## Instructions\nAnswer concisely based on the context above."
+        user_prompt = (
+            f"## Context materials\n{context_block}\n\n"
+            f"## Student question\n{question}\n\n"
+            "## Instructions\nAnswer concisely based on the context above."
+        )
 
         if strict:
             user_prompt += (

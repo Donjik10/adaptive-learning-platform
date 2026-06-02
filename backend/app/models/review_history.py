@@ -1,11 +1,18 @@
+from __future__ import annotations
+
 import uuid
 from datetime import datetime
+from typing import TYPE_CHECKING
 
 from sqlalchemy import Boolean, DateTime, Float, ForeignKey, Integer, func
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
+
+if TYPE_CHECKING:
+    from app.models.flashcard import Flashcard
+    from app.models.user import User
 
 
 class ReviewHistory(Base):
@@ -46,5 +53,7 @@ class ReviewHistory(Base):
         index=True,
     )
 
-    user: Mapped["User"] = relationship("User", back_populates="review_history")
-    flashcard: Mapped["Flashcard"] = relationship("Flashcard", back_populates="review_history")
+    user: Mapped[User] = relationship("User", back_populates="review_history")
+    flashcard: Mapped[Flashcard] = relationship(
+        "Flashcard", back_populates="review_history",
+    )

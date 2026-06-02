@@ -1,10 +1,12 @@
+from __future__ import annotations
+
 import uuid
 from datetime import datetime
+from typing import TYPE_CHECKING
 
 from sqlalchemy import (
     UUID,
     DateTime,
-    Enum,
     ForeignKey,
     String,
     Text,
@@ -13,6 +15,11 @@ from sqlalchemy import (
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
+
+if TYPE_CHECKING:
+    from app.models.subject import Subject
+    from app.models.submission import Submission
+    from app.models.user import User
 
 
 class Assignment(Base):
@@ -36,8 +43,8 @@ class Assignment(Base):
         DateTime(timezone=True), server_default=func.now(),
     )
 
-    teacher: Mapped["User"] = relationship("User", back_populates="assignments")
-    course: Mapped["Subject"] = relationship("Subject", back_populates="assignments")
-    submissions: Mapped[list["Submission"]] = relationship(
+    teacher: Mapped[User] = relationship("User", back_populates="assignments")
+    course: Mapped[Subject] = relationship("Subject", back_populates="assignments")
+    submissions: Mapped[list[Submission]] = relationship(
         "Submission", back_populates="assignment", lazy="selectin",
     )

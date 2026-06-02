@@ -8,7 +8,7 @@ updates (ease_factor, interval, repetitions) for a flashcard.
 """
 
 from dataclasses import dataclass
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 
 @dataclass
@@ -55,7 +55,7 @@ def calculate_sm2(
     if ease_factor < 1.3:
         ease_factor = 1.3
 
-    next_review_at = datetime.now(timezone.utc) + timedelta(days=interval)
+    next_review_at = datetime.now(UTC) + timedelta(days=interval)
 
     return SM2Result(
         ease_factor=round(ease_factor, 2),

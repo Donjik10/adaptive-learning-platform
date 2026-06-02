@@ -1,11 +1,18 @@
+from __future__ import annotations
+
 import uuid
 from datetime import datetime
+from typing import TYPE_CHECKING
 
 from sqlalchemy import DateTime, ForeignKey, String, func
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
+
+if TYPE_CHECKING:
+    from app.models.flashcard import Flashcard
+    from app.models.subject import Subject
 
 
 class Topic(Base):
@@ -40,10 +47,10 @@ class Topic(Base):
         DateTime(timezone=True), server_default=func.now(),
     )
 
-    subject: Mapped["Subject"] = relationship("Subject", back_populates="topics")
-    parent_topic: Mapped["Topic | None"] = relationship(
+    subject: Mapped[Subject] = relationship("Subject", back_populates="topics")
+    parent_topic: Mapped[Topic | None] = relationship(
         "Topic", remote_side="Topic.id", backref="children",
     )
-    flashcards: Mapped[list["Flashcard"]] = relationship(
+    flashcards: Mapped[list[Flashcard]] = relationship(
         "Flashcard", back_populates="topic", lazy="selectin",
     )

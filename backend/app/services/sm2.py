@@ -1,5 +1,5 @@
 import math
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from uuid import UUID
 
 from sqlalchemy import select
@@ -163,7 +163,7 @@ class SM2Service:
             )
             ef, interval, reps = sm2.ease_factor, sm2.interval, sm2.repetitions
 
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         next_review = now + timedelta(days=interval) if reviews else now
 
         sm2_row = await self._get_or_create_sm2(user_id, flashcard_id)

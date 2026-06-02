@@ -1,7 +1,8 @@
 """Tests for file extraction and RAG-related pure functions."""
 
 import math
-import json
+
+import pytest
 
 
 def test_cosine_similarity_identical():
@@ -37,10 +38,10 @@ def test_cosine_similarity_zero_vector():
 
 
 def test_cosine_similarity_different_lengths():
-    """Vectors of different lengths should raise or handle gracefully."""
+    """Vectors of different lengths should raise ValueError."""
     a = [1.0, 2.0]
     b = [1.0, 2.0, 3.0]
-    with _raises_or_handles(a, b):
+    with pytest.raises(ValueError, match="same length"):
         _cosine_sim(a, b)
 
 
@@ -48,7 +49,7 @@ def test_chunk_text_basic():
     """Basic text chunking should split by word count."""
     text = "word " * 500
     chunks = _chunk_text(text, chunk_size=200, overlap=50)
-    assert len(chunks) >= 2  # 500 words with 200 chunk / 50 overlap -> ~3 chunks
+    assert len(chunks) >= 2
     assert all(len(c.split()) <= 200 for c in chunks)
 
 
@@ -74,10 +75,7 @@ def test_chunk_text_overlap():
         chunk1_words = chunks[0].split()
         chunk2_words = chunks[1].split()
         overlap = set(chunk1_words[-3:]) & set(chunk2_words[:3])
-        assert len(overlap) > 0, f"No overlap between:\n  {chunks[0]}\n  {chunks[1]}"
-
-
-# ---- Helper functions (mirroring the ones in rag.py and auth.py) ----
+        assert len(overlap) > 0
 
 
 def _cosine_sim(a: list[float], b: list[float]) -> float:
@@ -101,27 +99,3 @@ def _chunk_text(text: str, chunk_size: int, overlap: int) -> list[str]:
         chunks.append(chunk)
         start += chunk_size - overlap
     return chunks if chunks else [text]
-
-
-def _raises_or_handles(a, b):
-    """Context manager for testing."""
-    return _ErrorHandler(a, b)
-
-
-class _ErrorHandler:
-    def __init__(self, a, b):
-        self.a = a
-        self.b = b
-
-    def __enter__(self):
-        pass
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        pass
-
-    def __iter__(self):
-        try:
-            _cosine_sim(self.a, self.b)
-        except ValueError:
-            pass
-        return iter([])

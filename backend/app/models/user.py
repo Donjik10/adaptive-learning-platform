@@ -1,12 +1,21 @@
+from __future__ import annotations
+
 import enum
 import uuid
 from datetime import datetime
+from typing import TYPE_CHECKING
 
 from sqlalchemy import DateTime, Enum, Float, String, func
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
+
+if TYPE_CHECKING:
+    from app.models.assignment import Assignment
+    from app.models.review_history import ReviewHistory
+    from app.models.sm2_data import SM2Data
+    from app.models.submission import Submission
 
 
 class UserRole(enum.Enum):
@@ -49,15 +58,15 @@ class User(Base):
         DateTime(timezone=True), server_default=func.now(), onupdate=func.now(),
     )
 
-    review_history: Mapped[list["ReviewHistory"]] = relationship(
+    review_history: Mapped[list[ReviewHistory]] = relationship(
         "ReviewHistory", back_populates="user", lazy="selectin",
     )
-    sm2_data: Mapped[list["SM2Data"]] = relationship(
+    sm2_data: Mapped[list[SM2Data]] = relationship(
         "SM2Data", back_populates="user", lazy="selectin",
     )
-    assignments: Mapped[list["Assignment"]] = relationship(
+    assignments: Mapped[list[Assignment]] = relationship(
         "Assignment", back_populates="teacher", lazy="selectin",
     )
-    submissions: Mapped[list["Submission"]] = relationship(
+    submissions: Mapped[list[Submission]] = relationship(
         "Submission", back_populates="student", lazy="selectin",
     )

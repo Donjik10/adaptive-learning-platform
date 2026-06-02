@@ -1,11 +1,18 @@
+from __future__ import annotations
+
 import uuid
 from datetime import datetime
+from typing import TYPE_CHECKING
 
 from sqlalchemy import Boolean, DateTime, ForeignKey, Text, func
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
+
+if TYPE_CHECKING:
+    from app.models.subject import Subject
+    from app.models.user import User
 
 
 class TeacherRule(Base):
@@ -41,8 +48,8 @@ class TeacherRule(Base):
         DateTime(timezone=True), server_default=func.now(),
     )
 
-    teacher: Mapped["User"] = relationship("User", backref="teacher_rules")
-    course: Mapped["Subject"] = relationship("Subject", backref="teacher_rules")
+    teacher: Mapped[User] = relationship("User", backref="teacher_rules")
+    course: Mapped[Subject] = relationship("Subject", backref="teacher_rules")
 
     @classmethod
     async def get_for_course(cls, session, course_id):

@@ -1,11 +1,18 @@
+from __future__ import annotations
+
 import uuid
 from datetime import datetime
+from typing import TYPE_CHECKING
 
 from sqlalchemy import DateTime, String, func
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
+
+if TYPE_CHECKING:
+    from app.models.assignment import Assignment
+    from app.models.topic import Topic
 
 
 class Subject(Base):
@@ -26,9 +33,9 @@ class Subject(Base):
         DateTime(timezone=True), server_default=func.now(),
     )
 
-    topics: Mapped[list["Topic"]] = relationship(
+    topics: Mapped[list[Topic]] = relationship(
         "Topic", back_populates="subject", lazy="selectin",
     )
-    assignments: Mapped[list["Assignment"]] = relationship(
+    assignments: Mapped[list[Assignment]] = relationship(
         "Assignment", back_populates="course", lazy="selectin",
     )

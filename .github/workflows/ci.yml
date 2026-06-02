@@ -2,10 +2,10 @@ name: CI
 
 on:
   push:
-    branches: [main, master]
+    branches: [main, master, version-0.5]
     paths: ["backend/**"]
   pull_request:
-    branches: [main, master]
+    branches: [main, master, version-0.5]
     paths: ["backend/**"]
 
 jobs:

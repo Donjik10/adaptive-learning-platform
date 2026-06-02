@@ -6,12 +6,14 @@ from app.models.subject import Subject
 from app.models.topic import Topic
 from app.models.user import User, UserRole
 
+
 async def seed_demo_data(session: AsyncSession) -> None:
     result = await session.execute(select(Subject).limit(1))
     if result.scalar_one_or_none() is not None:
         return
 
     from datetime import datetime, timedelta
+
     from app.services.auth import get_password_hash
 
     user = User(
@@ -68,12 +70,14 @@ async def seed_demo_data(session: AsyncSession) -> None:
             "description": "Forces, energy & motion",
             "topics": [
                 ("Mechanics", "Motion, forces & Newton's laws", [
-                    "What is Newton's First Law?", "Object stays at rest or uniform motion unless acted upon",
+                    "What is Newton's First Law?",
+                    "Object stays at rest or uniform motion unless acted upon",
                     "Formula for force", "F = ma",
                     "What is acceleration?", "Rate of change of velocity",
                 ]),
                 ("Thermodynamics", "Heat & energy transfer", [
-                    "What is the 1st Law of Thermodynamics?", "Energy cannot be created or destroyed",
+                    "What is the 1st Law of Thermodynamics?",
+                    "Energy cannot be created or destroyed",
                     "What is entropy?", "Measure of disorder in a system",
                     "Formula for heat energy", "Q = mcΔT",
                 ]),
@@ -156,8 +160,8 @@ async def seed_demo_data(session: AsyncSession) -> None:
 
     # Demo assignments
     from app.models.assignment import Assignment
-    from app.models.submission import Submission, SubmissionStatus
     from app.models.message import Message, SenderType
+    from app.models.submission import Submission, SubmissionStatus
 
     subjects_result = await session.execute(select(Subject))
     subjects_list = subjects_result.scalars().all()
@@ -178,7 +182,10 @@ async def seed_demo_data(session: AsyncSession) -> None:
         {
             "course": subjects_list[1],
             "title": "Newton's Laws Essay",
-            "description": "Write a 500-word essay explaining Newton's three laws with real-world examples.",
+            "description": (
+                "Write a 500-word essay explaining Newton's three laws "
+                "with real-world examples."
+            ),
             "deadline": datetime.now() + timedelta(days=10),
         },
         {
@@ -210,7 +217,10 @@ async def seed_demo_data(session: AsyncSession) -> None:
             submission = Submission(
                 assignment_id=assignment.id,
                 student_id=user.id,
-                content_text=f"Here is my submission for {ad['title']}. I completed all the required tasks.",
+                content_text=(
+                    f"Here is my submission for {ad['title']}. "
+                    "I completed all the required tasks."
+                ),
                 status=SubmissionStatus.PENDING,
             )
             session.add(submission)
@@ -231,7 +241,11 @@ async def seed_demo_data(session: AsyncSession) -> None:
                     submission_id=submission.id,
                     sender_id=None,
                     sender_type=SenderType.AI_TUTOR,
-                    message_text="Great work! Your solutions are mostly correct. Consider showing your work step-by-step for partial credit. Check problem #3 — you may have made a small sign error.",
+                    message_text=(
+                        "Great work! Your solutions are mostly correct. "
+                        "Consider showing your work step-by-step for partial credit. "
+                        "Check problem #3 — you may have made a small sign error."
+                    ),
                 )
                 session.add(ai_msg)
                 submission.status = SubmissionStatus.AI_REVIEWED
@@ -242,7 +256,10 @@ async def seed_demo_data(session: AsyncSession) -> None:
                     submission_id=submission.id,
                     sender_id=teacher_user.id,
                     sender_type=SenderType.TEACHER,
-                    message_text="Excellent! You demonstrated a solid understanding of geometric concepts. 95/100.",
+                    message_text=(
+                        "Excellent! You demonstrated a solid understanding "
+                        "of geometric concepts. 95/100."
+                    ),
                 )
                 session.add(teacher_msg)
                 submission.status = SubmissionStatus.REVIEWED

@@ -1,3 +1,4 @@
+from datetime import UTC
 from uuid import UUID
 
 from sqlalchemy import select
@@ -39,12 +40,13 @@ class FlashcardService:
         Return flashcards that are due for review for a given user,
         based on their SM-2 scheduling data.
         """
-        from datetime import datetime, timezone
+        from datetime import datetime
+
         from sqlalchemy import select as sa_select
 
         from app.models.sm2_data import SM2Data
 
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         stmt = (
             sa_select(Flashcard)
             .join(SM2Data, SM2Data.flashcard_id == Flashcard.id)
