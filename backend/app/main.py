@@ -16,7 +16,10 @@ from app.utils.seed import seed_demo_data
 logger.remove()
 logger.add(
     sys.stderr,
-    format="<green>{time:HH:mm:ss}</green> | <level>{level:<8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan> | {message}",
+    format=(
+        "<green>{time:HH:mm:ss}</green> | <level>{level:<8}</level> | "
+        "<cyan>{name}</cyan>:<cyan>{function}</cyan> | {message}"
+    ),
     level="DEBUG" if settings.DEBUG else "INFO",
     colorize=True,
 )

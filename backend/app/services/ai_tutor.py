@@ -1,8 +1,8 @@
 from uuid import UUID
 
+from openai import APIError as OpenAIAPIError
 from openai import AsyncOpenAI
 from openai import RateLimitError as OpenAIRateLimitError
-from openai import APIError as OpenAIAPIError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config import settings

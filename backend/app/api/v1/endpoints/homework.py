@@ -213,7 +213,11 @@ async def get_chat_messages(
     return result.scalars().all()
 
 
-@router.post("/submissions/{submission_id}/chat", response_model=ChatMessageResponse, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/submissions/{submission_id}/chat",
+    response_model=ChatMessageResponse,
+    status_code=status.HTTP_201_CREATED,
+)
 async def post_chat_message(
     submission_id: UUID,
     req: ChatMessageCreate,
@@ -269,7 +273,8 @@ async def request_ai_review(
 
     ai_service = AITutorService(session)
     prompt = (
-        f"You are an AI tutor. Review the student's submission and provide constructive feedback.\n\n"
+        "You are an AI tutor. Review the student's submission and provide "
+        "constructive feedback.\n\n"
         f"Assignment: {submission.assignment.title}\n"
         f"Description: {submission.assignment.description or 'N/A'}\n\n"
         f"Student submission:\n{submission.content_text or '(no text provided)'}\n\n"

@@ -1,6 +1,9 @@
+from __future__ import annotations
+
 import enum
 import uuid
 from datetime import datetime
+from typing import TYPE_CHECKING
 
 from sqlalchemy import (
     UUID,
@@ -13,6 +16,10 @@ from sqlalchemy import (
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
+
+if TYPE_CHECKING:
+    from app.models.submission import Submission
+    from app.models.user import User
 
 
 class SenderType(enum.Enum):
@@ -41,7 +48,7 @@ class Message(Base):
         DateTime(timezone=True), server_default=func.now(),
     )
 
-    submission: Mapped["Submission"] = relationship(
+    submission: Mapped[Submission] = relationship(
         "Submission", back_populates="messages",
     )
-    sender: Mapped["User | None"] = relationship("User")
+    sender: Mapped[User | None] = relationship("User")

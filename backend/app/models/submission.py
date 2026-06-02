@@ -1,6 +1,9 @@
+from __future__ import annotations
+
 import enum
 import uuid
 from datetime import datetime
+from typing import TYPE_CHECKING
 
 from sqlalchemy import (
     UUID,
@@ -14,6 +17,11 @@ from sqlalchemy import (
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
+
+if TYPE_CHECKING:
+    from app.models.assignment import Assignment
+    from app.models.message import Message
+    from app.models.user import User
 
 
 class SubmissionStatus(enum.Enum):
@@ -43,10 +51,10 @@ class Submission(Base):
         DateTime(timezone=True), server_default=func.now(),
     )
 
-    assignment: Mapped["Assignment"] = relationship(
+    assignment: Mapped[Assignment] = relationship(
         "Assignment", back_populates="submissions",
     )
-    student: Mapped["User"] = relationship("User", back_populates="submissions")
-    messages: Mapped[list["Message"]] = relationship(
+    student: Mapped[User] = relationship("User", back_populates="submissions")
+    messages: Mapped[list[Message]] = relationship(
         "Message", back_populates="submission", lazy="selectin",
     )

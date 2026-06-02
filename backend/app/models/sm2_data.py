@@ -1,11 +1,18 @@
+from __future__ import annotations
+
 import uuid
 from datetime import datetime
+from typing import TYPE_CHECKING
 
 from sqlalchemy import DateTime, Float, ForeignKey, Integer, func
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
+
+if TYPE_CHECKING:
+    from app.models.flashcard import Flashcard
+    from app.models.user import User
 
 
 class SM2Data(Base):
@@ -52,5 +59,7 @@ class SM2Data(Base):
         DateTime(timezone=True), server_default=func.now(), onupdate=func.now(),
     )
 
-    user: Mapped["User"] = relationship("User", back_populates="sm2_data")
-    flashcard: Mapped["Flashcard"] = relationship("Flashcard", back_populates="sm2_data")
+    user: Mapped[User] = relationship("User", back_populates="sm2_data")
+    flashcard: Mapped[Flashcard] = relationship(
+        "Flashcard", back_populates="sm2_data",
+    )

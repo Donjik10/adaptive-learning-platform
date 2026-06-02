@@ -1,4 +1,3 @@
-import os
 import uuid
 from datetime import datetime
 from pathlib import Path
@@ -20,7 +19,9 @@ router = APIRouter()
 UPLOAD_DIR = Path("uploads/materials")
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
-ALLOWED_EXTENSIONS = {".txt", ".md", ".csv", ".pdf", ".docx", ".doc", ".json", ".xml", ".html", ".htm"}
+ALLOWED_EXTENSIONS = {
+    ".txt", ".md", ".csv", ".pdf", ".docx", ".doc", ".json", ".xml", ".html", ".htm",
+}
 MAX_FILE_SIZE = 50 * 1024 * 1024  # 50 MB
 
 @router.put("/rules/{teacher_id}", response_model=TeacherRuleRead)

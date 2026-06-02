@@ -1,7 +1,8 @@
 """Tests for the SM-2 algorithm — the core scheduling logic."""
 
-from datetime import datetime, timezone, timedelta
-from app.utils.sm2_algorithm import calculate_sm2, SM2Result
+from datetime import UTC, datetime, timedelta
+
+from app.utils.sm2_algorithm import SM2Result, calculate_sm2
 
 
 def test_sm2_initial_review():
@@ -10,7 +11,7 @@ def test_sm2_initial_review():
     assert result.interval == 1
     assert result.repetitions == 1
     assert result.ease_factor == 2.6
-    assert result.next_review_at > datetime.now(timezone.utc)
+    assert result.next_review_at > datetime.now(UTC)
 
 
 def test_sm2_second_review():
@@ -58,7 +59,7 @@ def test_sm2_quality_3_boundary():
 def test_sm2_next_review_is_future():
     """next_review_at should always be in the future."""
     result = calculate_sm2(ease_factor=2.5, interval=0, repetitions=0, quality=5)
-    assert result.next_review_at > datetime.now(timezone.utc) - timedelta(seconds=1)
+    assert result.next_review_at > datetime.now(UTC) - timedelta(seconds=1)
 
 
 def test_sm2_returns_dataclass():
