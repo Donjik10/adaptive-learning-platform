@@ -8,14 +8,9 @@
 - **Frontend:** TypeScript, React, Redux Toolkit, Tailwind CSS
 - **AI/RAG:** локальная Ollama-модель, embeddings, поиск по загруженным материалам
 - **Инфраструктура:** Docker Compose, `.env.example`, healthcheck, Swagger API
-- **Качество:** настроены `pytest`, `ruff`, `mypy`; есть тесты для авторизации, RAG и SM-2 алгоритма
-
-### Быстрая проверка тестов
-
-```bash
-cd backend
-pytest
-```
+- **Качество:** CI (GitHub Actions), `pytest`, `ruff`, `mypy`, `pre-commit`, `loguru`
+- **Тесты:** SM-2 алгоритм, авторизация (JWT + bcrypt), RAG (cosine similarity, chunking)
+- **Валидация:** Pydantic v2 `field_validator` на всех схемах
 
 ## Системные требования
 
@@ -183,6 +178,31 @@ ai_platform_frontend  | Compiled successfully!
 - **Загрузка файлов в Course Materials** — преподаватель загружает файлы (PDF, DOCX, TXT, CSV, JSON, XML, HTML) до 50 МБ, текст извлекается автоматически, создаются эмбеддинги для RAG
 - **Тёмная тема** — переключается в шапке сайта
 - **Русский / Английский** — переключается в шапке сайта
+
+### Для разработчиков
+
+**Локальный запуск тестов:**
+```bash
+cd backend
+pip install -r requirements-dev.txt
+pytest -v
+```
+
+**Линтер и типы:**
+```bash
+ruff check .
+mypy app/ tests/
+```
+
+**Pre-commit хуки (автоматический формат при commit):**
+```bash
+pip install pre-commit
+pre-commit install
+```
+
+**Логирование:** используется `loguru` — логи пишутся в `backend/logs/app.log` с ротацией 10 МБ.
+
+**CI/CD:** при пуше в `main/master/version-0.5` GitHub Actions запускает: ruff → mypy → pytest.
 
 ---
 
